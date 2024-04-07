@@ -4,6 +4,31 @@ local M = {}
 local BUFNR = {}
 
 -- window options
+M.Winopts = {
+    relativenumber = false,
+    number = false,
+    list = false,
+    signcolumn = "yes",
+    spell = false,
+    cursorcolumn = false,
+    cursorline = true,
+    cursorlineopt = "both",
+    wrap = false,
+    winfixwidth = true,
+    winfixheight = true,
+    winhl = table.concat({
+        "EndOfBuffer:MiniBufferEndOfBuffer",
+        "CursorLine:MiniBufferCursorLine",
+        "CursorLineNr:MiniBufferCursorLineNr",
+        "LineNr:MiniBufferLineNr",
+        "WinSeparator:MiniBufferWinSeparator",
+        "SineColumn:MiniBufferSignColumn",
+        "Normal:MiniBufferNormal",
+        "NormalNC:MiniBufferNormalNC",
+    }, ","),
+}
+
+-- window options
 local WIN_OPTIONS = {
     relativenumber = false,
     number = false,
@@ -52,7 +77,7 @@ local function create_buffer()
     pcall(vim.cmd "botright 5new")
     local eventignore = vim.opt.eventignore
     vim.opt.eventignore = "all"
-    for k, v in pairs(WIN_OPTIONS) do
+    for k, v in pairs(M.Winopts) do
         vim.opt_local[k] = v
     end
     vim.opt.eventignore = eventignore
@@ -159,9 +184,19 @@ function M.delete()
     set_bufs()
 end
 
+-- Used on ColorScheme event
+function M.reset_winhl()
+    local winnr = vim.api.nvim_get_current_win()
+    vim.wo[winnr].winhl = M.Winopts.winhl
+end
+
 -- Initialized config
 function M.setup(opts)
     local options = opts or {}
+    M.Winopts.cursorline = options.winopts.cursorline
+    M.Winopts.number = options.winopts.number
+    M.Winopts.relativenumber = options.winopts.relativenumber
+    M.Winopts.signcolumn = options.winopts.signcolumn
 end
 
 return M

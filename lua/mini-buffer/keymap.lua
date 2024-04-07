@@ -1,3 +1,4 @@
+
 local M = {}
 
 -- Apply mappings to a scratch buffer and return buffer local mappings
@@ -19,8 +20,9 @@ local function generate_keymap(fn)
     return keymap
 end
 
+-- @param bufnr integer
 function M.default_on_attach(bufnr)
-    local view = require("mini-buffer.view")
+    local api = require("mini-buffer.api")
 
     local function opts(desc)
         return {
@@ -32,20 +34,13 @@ function M.default_on_attach(bufnr)
         }
     end
 
-    local wrap = function(func, type)
-        local args = type
-        return function()
-            func(args)
-        end
-    end
-
     -- GEGIN_DEFAULT_ON_ATTACH
-    vim.keymap.set('n', '<cr>', wrap(view.open, "e"), opts('editbuffer'))
-    vim.keymap.set('n', 'v<cr>', wrap(view.open, "v"), opts('editbuffer'))
-    vim.keymap.set('n', 's<cr>', wrap(view.open, "s"), opts('editbuffer'))
-    vim.keymap.set('n', 't<cr>', view.topen, opts('editbuffer'))
-    vim.keymap.set('n', 'q', view.close, opts('close buffer list'))
-    vim.keymap.set('n', 'd', view.delete, opts('delete buffer'))
+    vim.keymap.set('n', '<cr>', api.view.open, opts('edit buffer'))
+    vim.keymap.set('n', 's<cr>', api.view.sopen, opts('split buffer'))
+    vim.keymap.set('n', 'v<cr>', api.view.vopen, opts('vsplit buffer'))
+    vim.keymap.set('n', 't<cr>', api.view.topen, opts('tabnew buffer'))
+    vim.keymap.set('n', 'q', api.view.close, opts('close buffer list'))
+    vim.keymap.set('n', 'd', api.view.delete, opts('delete buffer'))
 end
 
 -- @return table
