@@ -1,0 +1,31 @@
+#!/usr/bin/env fish
+
+if test -z "$VIMRUNTIME"
+    set VIMRUNTIME (nvim --clean --headless --cmd 'echo $VIMRUNTIME|q')
+end
+
+set -l DIR_SRC "lua"
+set -l DIR_OUT "luals-out"
+
+# clear output
+rm -rf "$DIR_OUT"
+mkdir "$DIR_OUT"
+
+set OUT (lua-language-server --check="$DIR_SRC" --configpath="$PWD/.luarc.json" -checklevel=Information --logpath="$DIR_OUT" --loglevel=error)
+
+echo "$OUT" >&2
+
+if test $status -ne 0
+    echo "failed with RC=$status"
+    exit $status
+end
+
+# any output is a failed
+if test (string match "*Diagnosis\ complete*" "$OUT")
+    if test -e "$DIR_OUT/check.json"
+        cat "$DIR_OUT/check.json"
+        exit 1
+    end
+end
+
+exit 0
