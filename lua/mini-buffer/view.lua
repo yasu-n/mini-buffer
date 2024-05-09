@@ -28,21 +28,6 @@ M.Winopts = {
     }, ","),
 }
 
--- window options
-local WIN_OPTIONS = {
-    relativenumber = false,
-    number = false,
-    list = false,
-    signcolumn = "yes",
-    spell = false,
-    cursorcolumn = false,
-    cursorline = true,
-    cursorlineopt = "both",
-    wrap = false,
-    winfixwidth = true,
-    winfixheight = true,
-}
-
 -- buffer options
 local BUFFER_OPTIONS = {
     swapfile = false,

@@ -21,11 +21,9 @@ if test $status -ne 0
 end
 
 # any output is a failed
-if test (string match "*Diagnosis\ complete*" "$OUT")
-    if test -e "$DIR_OUT/check.json"
-        cat "$DIR_OUT/check.json"
-        exit 1
-    end
+if test -e "$DIR_OUT/check.json"
+    cat "$DIR_OUT/check.json"
+    exit 1
 end
 
 exit 0

@@ -1,4 +1,4 @@
-local view = require("mini-buffer.view")
+local api = require("mini-buffer.api")
 
 local M = {}
 
@@ -9,7 +9,7 @@ local CMDS = {
             desc = "mini-buffer: open",
         },
         command = function()
-            view.open_mini_buffer()
+            api.buf.open()
         end,
     },
     {
@@ -18,7 +18,7 @@ local CMDS = {
             desc = "mini-buffer: close",
         },
         command = function()
-            view.close()
+            api.buf.close()
         end,
     }
 }

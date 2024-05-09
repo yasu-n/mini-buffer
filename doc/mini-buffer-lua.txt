@@ -1,0 +1,109 @@
+*mini-buffer.lua* Buffer List For Neovim Written in lua
+
+Author: yasu-n
+=============================================================================
+ 1. INTRODUCTION                                    *mini-buffer-introduction*
+
+mini-buffer is buffer list with simple.
+The features are show buffer list, open buffer and delete buffer.
+
+=============================================================================
+ 2. SETUP                                                  *mini-buffer-setup*
+
+Setup the plugin in your 'init.lua' >
+
+ -- empty.setup using defaults
+ require("mini-buffer").steup()
+
+ -- or setup with some options
+ require("mini-buffer").setup({
+    winopts = {
+        number = true,
+    }
+ })
+<
+=============================================================================
+ 3. HELP                                                   *mini-buffer-help*
+
+`q`         close buffer list
+`d`         delete buffer
+`<CR>`      open buffer
+`s<CR>`     split buffer
+`v<CR>`     vsplit buffer
+`t<CR>`     tabnew buffer
+
+
+=============================================================================
+ 4. CUSTOM MAPPING
+
+ -- keymap for command
+ vim.keymap.set('n', '<space>b', ':MiniBufferOpen', {
+    noremap = true,
+    silent = true,
+    nowait = true,
+ })
+
+ vim.keymap.set('n', '<space>q', ':MiniBufferClose', {
+    noremap = true,
+    silent = true,
+    nowait = true,
+ })
+
+ -- custom on_attach
+ local function my_on_attach(bufnr)
+    local api = require("mini-buffer.api")
+    local function opts(desc)
+        return {
+            desc = "mini-buffer: " .. desc,
+            buffer = bufnr,
+            noremap = true,
+            silent = true,
+            nowait = true
+        }
+    end
+
+    -- custom mappings
+    vim.keymap.set("n", "<cr>", api.view.open, opts("edit buffer"))
+    vim.keymap.set("n", "s<cr>", api.view.sopen, opts("split buffer"))
+    vim.keymap.set("n", "v<cr>", api.view.vopen, opts("vsplit buffer"))
+    vim.keymap.set("n", "t<cr>", api.view.topen, opts("tabnew buffer"))
+    vim.keymap.set("n", "d", api.view.delete, opts("delete buffer"))
+    vim.keymap.set("n", "q", api.viw.close, opts("close mini-buffer list"))
+end
+
+require("mini-buffer").setup({
+    on_attach = my_on_attach,
+    winopts = {
+        relativenumber = false,
+        number = false,
+        list = false,
+        signcolumn = "yes",
+    }
+})
+
+=============================================================================
+ 5. HIGHLIGHT                                          *mini-buffer-highlight*
+
+    vim.cmd[[
+        :hi MiniBufferEndOfBuffer guibg=#343f4c"
+        :hi MiniBufferCursorLine guibg=#343f4c"
+        :hi MiniBufferCursorLineNr guibg=#343f4c"
+        :hi MiniBufferLineNr guibg=#343f4c"
+        :hi MiniBufferWinSeparator guibg=#343f4c"
+        :hi MiniBufferSignColumn guibg=#343f4c"
+        :hi MiniBufferNormal guibg=#343f4c"
+        :hi MiniBufferNormalNC guibg=#343f4c"
+    ]]
+
+=============================================================================
+ 6. COMMANDS                                            *mini-buffer-commands*
+
+*MiniBufferOpen*
+
+   Open the buffer list.
+
+*MiniBufferClose*
+
+   Close the buffer list.
+
+vim:tw=78:ts=4:sw=4:et:ft=help:norl:
